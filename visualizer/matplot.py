@@ -1,4 +1,5 @@
 from matplotlib import pyplot as plt
+from shapely.geometry import Polygon
 from arch_elements import Room
 from typing import List
 
@@ -11,9 +12,13 @@ class MatPlot:
 
     def plot_rooms(self, rooms: List[Room]):
         for room in rooms:
-            x, y = room.polygon.exterior.xy
-            self.ax.plot(x, y)
+            self.plot_polygon(room.polygon)
+            self.ax.plot(room.mid_point.x, room.mid_point.y)
             self.ax.text(room.mid_point.x, room.mid_point.y, room.plot_name, horizontalalignment='center',
                          verticalalignment='center')
 
         plt.show()
+
+    def plot_polygon(self, polygon: Polygon):
+        x, y = polygon.exterior.xy
+        self.ax.plot(x, y)

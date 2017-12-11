@@ -15,6 +15,10 @@ class Room(PolygonalElement):
         return " ".join([str(self.arch_id), self.name, str(round(self.area, 2)), "m2", self.group])
 
     @property
+    def mid_point(self) -> Point:
+        return self.polygon.centroid
+
+    @property
     def plot_name(self) -> str:
         return " ".join([str(self.arch_id), self.name, "\n", str(round(self.area, 2)), "m2", "\n", self.group])
 
@@ -22,23 +26,27 @@ class Room(PolygonalElement):
         return self.representative_name
 
 
-def arrange_rooms_on_x(rooms: List[Room]):
-    sum_l = 0
-    for room in rooms:
-        room.move(Point(sum_l, 0))
-        sum_l += room.width*1.05
-
-
-class RoomBuilder:
+class RoomCollector:
     def __init__(self):
+        self.instances = []  # typing: List[Room]
         self.counter = 0
 
-    def create_room_from_xls(self, name: str, area: float, group: str) -> Room:
+    def create_room(self, name: str, area: float, group: str, center_point: Point = Point(0, 0)):
         ratio = 1.5
-        x = math.sqrt(area / ratio)
-        y = ratio*x
-        lin_ring = [(0, 0), (0, y), (x, y), (x, 0)]
+        width_x = math.sqrt(area / ratio)
+        length_y = ratio*width_x
+        min_x = center_point.x
+        min_y = center_point.y
+        max_x = center_point.x + width_x
+        max_y = center_point.y + length_y
+        lin_ring = [(min_x, min_y), (min_x, max_y), (max_x, max_y), (max_x, min_y)]
         polygon = Polygon(lin_ring)
         self.counter += 1
         room = Room(self.counter, polygon, name, group)
-        return room
+        self.instances.append(room)
+
+    def arrange_rooms_on_x(self):
+        sum_l = 0
+        for room in self.instances:
+            room.move(Point(sum_l, 0))
+            sum_l += room.width * 1.05
