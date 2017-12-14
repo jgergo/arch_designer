@@ -1,4 +1,5 @@
 import input_reader as ir
+from dc_rvd.demo_functions import rvd
 from arch_elements import RoomCollector
 from visualizer.matplot import MatPlot as MtPl
 from shapely.geometry import Point
@@ -27,6 +28,9 @@ if __name__ == '__main__':
              demo_inputs]
     # room_collector.arrange_rooms_on_x()
     pltr = MtPl()
-    pltr.plot_rooms(room_collector.instances)
-    for room in rooms:
+    pltr.plot_rooms(room_collector)
+
+    rvd(room_collector)
+
+    for room in room_collector:
         print(room)

@@ -19,6 +19,14 @@ class Room(PolygonalElement):
         return self.polygon.centroid
 
     @property
+    def x(self) -> float:
+        return self.mid_point.x
+
+    @property
+    def y(self) -> float:
+        return self.mid_point.y
+
+    @property
     def plot_name(self) -> str:
         return " ".join([str(self.arch_id), self.name, "\n", str(round(self.area, 2)), "m2", "\n", self.group])
 
@@ -28,7 +36,7 @@ class Room(PolygonalElement):
 
 class RoomCollector:
     def __init__(self):
-        self.instances = []  # typing: List[Room]
+        self._instances = []  # typing: List[Room]
         self.counter = 0
 
     def create_room(self, name: str, area: float, group: str, center_point: Point = Point(0, 0)):
@@ -43,10 +51,15 @@ class RoomCollector:
         polygon = Polygon(lin_ring)
         self.counter += 1
         room = Room(self.counter, polygon, name, group)
-        self.instances.append(room)
+        self._instances.append(room)
 
     def arrange_rooms_on_x(self):
         sum_l = 0
-        for room in self.instances:
+        for room in self._instances:
             room.move(Point(sum_l, 0))
             sum_l += room.width * 1.05
+
+    def __iter__(self) -> Room:
+        for i in self._instances:
+            yield i
+
