@@ -14,6 +14,11 @@ def rvd(rooms: RoomCollector):
         right = [e for e in rooms if e.x - room.x > abs(room.y - e.y)]
         top = [e for e in rooms if abs(room.x - e.x) < e.y - room.y]
         bottom = [e for e in rooms if abs(room.x - e.x) < room.y - e.y]
-        pass
+
+        for border in room.borders:
+            elements = [e for e in rooms if ]
+
+
+
 
 

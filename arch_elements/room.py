@@ -1,7 +1,26 @@
 from .polygonal_element import PolygonalElement
 from shapely.geometry import Polygon, Point
-from typing import List
+from .geometric_elements import Vector
+from typing import List, Tuple
 import math
+
+
+class RvdRoom:
+    def __init__(self, center_point: Vector, width: float, length: float):
+        self.length = length
+        self.width = width
+        self.center_point = center_point
+        self._xy_dims = Vector(width, length)
+        self._normals = [Vector(-1, 0), Vector(0, 1), Vector(1, 0), Vector(0, -1)]
+
+    @property
+    def borders(self) -> List[Tuple[Vector, Vector]]:
+        for v in self._normals:
+            yield v, v * self._xy_dims
+
+    def border_by_normal(self, normal: Vector) -> Tuple[Vector, Vector]:
+        border = [b for b in self.borders if (b[0] + normal).length == 0][0]
+        return border
 
 
 class Room(PolygonalElement):
@@ -42,7 +61,7 @@ class RoomCollector:
     def create_room(self, name: str, area: float, group: str, center_point: Point = Point(0, 0)):
         ratio = 1.5
         width_x = math.sqrt(area / ratio)
-        length_y = ratio*width_x
+        length_y = ratio * width_x
         min_x = center_point.x
         min_y = center_point.y
         max_x = center_point.x + width_x
@@ -62,4 +81,3 @@ class RoomCollector:
     def __iter__(self) -> Room:
         for i in self._instances:
             yield i
-
