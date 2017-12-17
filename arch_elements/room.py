@@ -1,6 +1,6 @@
 from .polygonal_element import PolygonalElement
 from shapely.geometry import Polygon, Point
-from .geometric_elements import Vector
+from geometryc_elements import Vector
 from typing import List, Tuple
 import math
 
@@ -17,6 +17,18 @@ class RvdRoom:
     def borders(self) -> List[Tuple[Vector, Vector]]:
         for v in self._normals:
             yield v, v * self._xy_dims
+
+    @property
+    def x(self) -> float:
+        return self.center_point.x
+
+    @property
+    def y(self) -> float:
+        return self.center_point.y
+
+    @property
+    def z(self) -> float:
+        return self.center_point.z
 
     def border_by_normal(self, normal: Vector) -> Tuple[Vector, Vector]:
         border = [b for b in self.borders if (b[0] + normal).length == 0][0]

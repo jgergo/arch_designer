@@ -1,1 +1,1 @@
-from .room import Room, RoomCollector
+from .room import Room, RoomCollector, RvdRoom
