@@ -6,7 +6,8 @@ import math
 
 
 class RvdRoom:
-    def __init__(self, center_point: Vector, width: float, length: float):
+    def __init__(self, center_point: Vector, width: float, length: float, name: str):
+        self.name = name
         self.length = length
         self.width = width
         self.center_point = center_point
@@ -30,9 +31,39 @@ class RvdRoom:
     def z(self) -> float:
         return self.center_point.z
 
+    @property
+    def min_x(self) ->float:
+        return self.center_point.x - self.width/2
+
+    @property
+    def max_x(self) -> float:
+        return self.center_point.x + self.width / 2
+
+    @property
+    def min_y(self) -> float:
+        return self.center_point.y - self.length / 2
+
+    @property
+    def max_y(self) -> float:
+        return self.center_point.y + self.length / 2
+
+    @property
+    def polygon(self) -> Polygon:
+        lin_ring = [(self.min_x, self.min_y), (self.min_x, self.max_y),
+                    (self.max_x, self.max_y), (self.max_x, self.min_y)]
+        return Polygon(lin_ring)
+
     def border_by_normal(self, normal: Vector) -> Tuple[Vector, Vector]:
         border = [b for b in self.borders if (b[0] + normal).length == 0][0]
         return border
+
+    @staticmethod
+    def from_area(center: Vector, area: float, name: str) -> "RvdRoom":
+        ratio = 1.3
+        width = area / (1 + ratio)
+        length = area / width
+        rvd_room = RvdRoom(center, width, length, name )
+        return rvd_room
 
 
 class Room(PolygonalElement):

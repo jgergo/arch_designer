@@ -1,6 +1,6 @@
 from matplotlib import pyplot as plt
 from shapely.geometry import Polygon
-from arch_elements import RoomCollector
+from arch_elements import RoomCollector, RvdRoom
 from typing import List
 
 
@@ -10,12 +10,24 @@ class MatPlot:
         self.ax = self.fig.add_subplot(111)
         self.ax.set_aspect(1)
 
-    def plot_rooms(self, rooms: RoomCollector):
+    def plot_room_collector(self, rooms: RoomCollector):
         for room in rooms:
             self.plot_polygon(room.polygon)
             self.ax.plot(room.mid_point.x, room.mid_point.y)
             self.ax.text(room.mid_point.x, room.mid_point.y, room.plot_name, horizontalalignment='center',
                          verticalalignment='center')
+
+            plt.draw()
+            plt.pause(0.1)
+            plt.waitforbuttonpress()
+
+    def plot_rooms(self, rooms: List[RvdRoom]):
+        for room in rooms:
+            self.plot_polygon(room.polygon)
+            self.ax.plot(room.x, room.y)
+            self.ax.text(room.x, room.y, room.name, horizontalalignment='center',
+                         verticalalignment='center')
+
 
         plt.draw()
         plt.pause(0.1)
