@@ -5,8 +5,8 @@ from voronoi.vor_methods import voronoi_finite_polygons_2d
 
 N = 15
 
-x = [np.random.random() for _ in range(N)]
-y = [np.random.random() for _ in range(N)]
+x = [np.random.randint(0, 10) for _ in range(N)]
+y = [np.random.randint(0, 10) for _ in range(N)]
 
 points = np.array(list(zip(x, y)))
 
